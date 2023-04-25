@@ -1,0 +1,52 @@
+.global _start
+
+  .section .text
+
+  movq $head, %rax
+  cmpq $node_0, 0(%rax)
+  jne bad_exit
+
+  movq $node_0, %rax
+  cmpq $397, (%rax)
+  jne bad_exit
+  cmpq $node_1, 8(%rax)
+  jne bad_exit
+
+  movq $node_1, %rax
+  cmpq $518, (%rax)
+  jne bad_exit
+  cmpq $node_2, 8(%rax)
+  jne bad_exit
+
+  movq $node_2, %rax
+  cmpq $190, (%rax)
+  jne bad_exit
+  cmpq $0, 8(%rax)
+  jne bad_exit
+
+
+  movq $60, %rax
+  movq $0, %rdi
+  syscall
+
+bad_exit:
+  movq $60, %rax
+  movq $1, %rdi
+  syscall
+
+.section .data
+  head:
+            .quad node_0
+  node_0:
+            .quad 397
+            .quad node_1
+  node_1:
+            .quad 518
+            .quad node_2
+  node_2:
+            .quad 190
+            .quad 0
+  Source: .quad node_0
+  val: .int 1547
+
+

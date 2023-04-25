@@ -9,10 +9,11 @@ loop_HW1:
     rol %rax
     inc %rcx
     cmpq $64, %rcx
-    je finish_HW1
     jb inc_HW1
+after_inc_HW1:
+    je finish_HW1
     jmp loop_HW1
 inc_HW1:
     incb Bool
-    jmp loop_HW1
+    jmp after_inc_HW1
 finish_HW1: 
