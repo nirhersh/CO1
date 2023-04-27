@@ -7,10 +7,10 @@ _start:
     movq num, %rax
 loop_HW1:
     rol %rax
+    jb inc_HW1 # CF is 1
+after_inc_HW1:
     inc %rcx
     cmpq $64, %rcx
-    jb inc_HW1
-after_inc_HW1:
     je finish_HW1
     jmp loop_HW1
 inc_HW1:
