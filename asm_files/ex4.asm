@@ -46,25 +46,65 @@ _find_value_loop_HW1:
 
 _switch_HW1:
     movq 4(%rdi), %rbx # update next of value
+    cmpq head(%rip), %rsi # if source = head, set: head=value
+    je _source_is_head_HW1
+    cmpq Value(%rip), %rdi # if value = head, set: head=source
+    je _value_is_head_HW1
+
+
+_source_is_head_HW1:
+    movq %rdi, head(%rip)
+    jmp _update_prev_source_HW1
+
+_value_is_head_HW1:
+    movq %rsi, head(%rip)
+    jmp _update_prev_source_HW1
 
 _update_prev_source_HW1:
     # prev source needs to point to value
     cmpq $0, %rcx
     je _update_source_HW1
+    cmpq %rdi, %rcx
+    je _prev_source_is_value_HW1
     movq %rdi, 4(%rcx)
+    jmp _update_source_HW1
+
+_prev_source_is_value_HW1:
+    # value needs to point to next_source
+    movq %rdx, 4(%rdi)
 
 _update_source_HW1:
     # source need to point to next_value
+    cmpq %rbx, %rsi
+    je _source_is_next_value_HW1
     movq %rbx, 4(%rsi)
+    jmp _update_prev_value_HW1
+
+_source_is_next_value_HW1:
+    # source needs to point to value
+    movq %rdi, 4(%rsi)
+    jmp _update_prev_value_HW1
 
 _update_prev_value_HW1:
-    # prev_value needs to point to source
+    # prev_value needs to point to source if its not him!
     cmpq $0, %rax
     je _update_value_HW1
+    cmpq %rsi, %rax
+    je _prev_value_is_source_HW1
     movq %rsi, 4(%rax)
+    jmp _update_value_HW1
+
+_prev_value_is_source_HW1:
+    jmp _update_value_HW1
 
 _update_value_HW1:
     # value needs to point to next_source
+    cmpq %rdx, %rdi
+    je _next_source_is_value_HW1 # value needs to point to source
     movq %rdx, 4(%rdi)
+    jmp _finish_HW1
+
+_next_source_is_value_HW1:
+    movq %rsi, 4(%rdi)
 
 _finish_HW1:
