@@ -28,7 +28,7 @@ _find_prev_source_loop_HW1:
     
 _found_prev_source_HW1:
     movq %rdi, %rcx
-    movq $head, %rdi # restore head pointer
+    movq head(%rip), %rdi # restore head pointer
     jmp _find_value_loop_HW1
 
 # By this point, we have: source, prev_source, next_source
@@ -48,8 +48,9 @@ _switch_HW1:
     movq 4(%rdi), %rbx # update next of value
     cmpq head(%rip), %rsi # if source = head, set: head=value
     je _source_is_head_HW1
-    cmpq Value(%rip), %rdi # if value = head, set: head=source
+    cmpq head(%rip), %rdi # if value = head, set: head=source
     je _value_is_head_HW1
+    jne _update_prev_source_HW1
 
 
 _source_is_head_HW1:
